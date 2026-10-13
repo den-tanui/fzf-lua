@@ -138,6 +138,12 @@ local GREP_PERL_REGEXP = utils.is_darwin() and "--extended-regexp" or "--perl-re
 ---@field __HLS fzf-lua.config.HLS Highlight group configuration.
 ---@field [string] any
 M.defaults = {
+  ---Timeout (ms) for RPC requests made from fzf-lua's picker sessions/workers
+  ---to the main nvim instance (`utils.rpcexec`), e.g. the initial `make_entry`
+  ---module load. Raise this if pickers come up empty (`Timeout`) with slow
+  ---machines or a lazy-loading config. Defaults to 200ms.
+  ---@type integer
+  rpc_timeout   = 200,
   nbsp          = utils.nbsp,
   winopts       = {
     height     = 0.85,
