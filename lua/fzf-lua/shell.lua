@@ -255,6 +255,8 @@ M.stringify_mt = function(contents, opts)
       -- ["_devicons_setup"] = config._devicons_setup,
       ["_EOL"] = utils.map_get(o, "fzf_opts.--read0") and "\0" or "\n",
       ["_debug"] = o.debug,
+      -- propagate the RPC timeout to headless workers (see `utils.rpcexec`)
+      ["_fzf_lua_rpc_timeout"] = tonumber(vim.env.FZF_LUA_RPC_TIMEOUT),
     }) do
       t.g[k] = v
     end

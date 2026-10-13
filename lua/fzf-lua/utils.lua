@@ -1705,7 +1705,14 @@ function M.rpcexec(addr, method, ...)
   pcall(function()
     require("ffi").cdef [[bool channel_close(unsigned long long id, int part, const char **error);]]
   end)
-  timer:start(200, 0, M.nil_wrap(function()
+  -- Timeout (ms) for the RPC request, configurable via the `FZF_LUA_RPC_TIMEOUT`
+  -- environment variable or the `_fzf_lua_rpc_timeout` global which the parent
+  -- instance forwards to headless workers in the spawn payload (`opts.g`).
+  -- Defaults to 200ms.
+  local timeout = tonumber(os.getenv("FZF_LUA_RPC_TIMEOUT"))
+      or tonumber(_G._fzf_lua_rpc_timeout) ---@diagnostic disable-line: undefined-field
+      or 200
+  timer:start(timeout, 0, M.nil_wrap(function()
     if not timer:is_closing() then timer:close() end
     fired = true
     require("ffi").C.channel_close(chan, 3, nil)
